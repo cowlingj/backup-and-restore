@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG_FILE="restore.conf"
+CONFIG_FILE="${HOME}/.config/restore.conf"
 LOADING_BAR_FILE="loading_bar.sh"
 
 source "${CONFIG_FILE}"

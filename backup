@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG_FILE="backup.conf"
+CONFIG_FILE="${HOME}/.config/backup.conf"
 LOADING_BAR_FILE="loading_bar.sh"
 
 # contains BACKUP_DIR, FILES_MAP, PAC_LIST,
