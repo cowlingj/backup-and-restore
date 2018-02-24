@@ -1,0 +1,49 @@
+.TH restore 1 "FEB 2017" "Linux User Manuals"
+.SH NAME
+restore \- restores files backed up with \fBbackup\fR.
+.SH SYNOPSIS
+.B restore
+.SH DESCRIPTION
+.B restore
+copies files from the backup directory to the file system.
+.SH FILES
+.B restore.conf
+\- stores all configuration.
+.PP
+.B loading_bar.sh
+\- a pretty loading bar to track the progress of the script at various stages.
+.SH CONFIGURATION
+.B restore.conf
+contains the following variables for configuration.
+.TP
+.B BACKUP_DIR
+Directory to save the files into.
+.TP
+.B PAC_LIST
+The file that the pacman package names will be written to. 
+.TP
+.B USER_LIST
+The file that the user package names will be written to.
+These files are saved for the sake of knowing what extra packages to install.
+Using \fBUSER_LIST\fR rather than backing up the actual installed programs is recommended for saving space.
+.TP
+.B CP_ARGS
+An array of arguments passed to \fBcp\fR when copying a file from the backup directory to the filesystem.
+.TP
+.B FILES_MAP
+The name of the file that will record the FILES associative array (for restoration with the \fBrestore\fR command).
+.TP
+.B USER_PKGS
+An array of packages installed by the user.
+.TP
+.B USE_COMPRESSION
+A command which will determine whether the backup directory will be compressed; if it has a zero exit status it will be compressed. The most basic commands include \fBtrue\fR and \fBfalse\fR.
+.TP
+.B COMPRESSED_FILE
+If the backup directory is compressed this is the file name it will be saved as (\fBtar\fR will choose a compression algorithm).
+.SH NOTES
+.B restore
+will not install packman packages or any packages from the user package list.
+To install pacman packages from a file use the command \fBpacman -S - < PAC_LIST\fR, replacing \fBPAC_LIST\fR with the name of the list of pacman packages.
+.SH SEE ALSO
+.B paman, backup, cp

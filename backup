@@ -1,0 +1,67 @@
+#!/bin/bash
+
+CONFIG_FILE="backup.conf"
+LOADING_BAR_FILE="loading_bar.sh"
+
+# contains BACKUP_DIR, FILES_MAP, PAC_LIST,
+# USER_LIST, USER_PKGS, and FILES
+source "${CONFIG_FILE}"
+# contains loading_bar()
+source "${LOADING_BAR_FILE}"
+
+$(${USE_COMPRESSION})
+COMPRESS=$?
+
+# check for a valid backup directory
+[ -f "$BACKUP_DIR" ] && echo "backup directory is a file" \
+  && exit 1
+[ ! -d "$BACKUP_DIR" ]\
+  && echo "backup directory doesn't exist, creating"\
+  && mkdir "$BACKUP_DIR"
+[ "$(ls -A ${BACKUP_DIR})" ] && echo "backup is not empty,"\
+  "carrying on anyway"
+
+# make a list file of packman packages
+echo "copying the list of pacman packages"
+pacman -Qqe > "${BACKUP_DIR}/${PAC_LIST}"
+echo "done"
+
+# make a list file of user maintained packages
+if [ ! -z "$USER_PKGS" ]; then
+  echo "copying the list of user packages"
+  n=${#USER_PKGS[@]}
+  i=0
+  for pkg in "${USER_PKGS}"; do
+    echo "$pkg" > "${BACKUP_DIR}/${USER_LIST}"
+    
+    loading_bar $i $n 20
+    ((i++))
+  done
+  loading_bar $i $n 20
+  printf "\n"
+  echo "done"
+fi
+
+# copy files and note down the map
+i=0
+n=${#FILES[@]}
+[ "$n" = "0" ] && echo "no files to copy, finished" && exit 0 
+echo "copying files (this may take some time)..."
+for key in "${!FILES[@]}"; do
+  cp -r -T "${FILES[$key]}" "${BACKUP_DIR}/${key}"
+  echo -e "${key}\t${FILES[$key]}" >> "${BACKUP_DIR}/${FILES_MAP}"
+
+  loading_bar $i $n 40
+  ((i++))
+done
+loading_bar $i $n 40
+echo ""
+echo "done"
+
+echo "${COMPRESS}"
+
+[ ${COMPRESS} ] && echo "compressing"\
+  && tar -cvaf "${COMPRESSED_FILE}" "${BACKUP_DIR}"\
+  && echo "done" && echo "cleaning up" && rm -r "${BACKUP_DIR}"\
+  && echo "done"
+
