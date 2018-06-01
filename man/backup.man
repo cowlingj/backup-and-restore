@@ -22,7 +22,7 @@ contains the following variables for configuration.
 .B BACKUP_DIR
 Directory to save the files into.
 .TP
-.B PAC_LIST
+.B MANAGED_PKGS
 The file that the pacman package names will be written to. 
 .TP
 .B USER_LIST
@@ -44,6 +44,15 @@ A command which will determine whether the backup directory will be compressed; 
 .TP
 .B COMPRESSED_FILE
 If the backup directory is compressed this is the file name it will be saved as (\fBtar\fR will choose a compression algorithm).
+.TP
+.B MANAGER
+The package manager being used.
+.TP
+.B APT_SOURCES
+Sources used by the apt package manager.
+.TP
+.B APT_KEYS
+Keys added to the apt package manager.
 .SH SEE ALSO
 .B pacman, restore
 
