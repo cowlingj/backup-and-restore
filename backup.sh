@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# TODO: fix versioning
 SCRIPT_VERSION="1.0.0"
 [ "$1" = "-v" ] || [ "$1" = "--version" ]  && echo "$0 $SCRIPT_VERSION" &&
   exit 0
@@ -7,6 +8,7 @@ SCRIPT_VERSION="1.0.0"
 SOURCE="$(readlink -f "$BASH_SOURCE")"
 . "${SOURCE%/*}/lib.sh"
 
+# TODO: look at major versions not exact version (semver and all)
 # contains BACKUP_DIR, FILES_MAP, PAC_LIST,
 # USER_LIST, USER_PKGS, and FILES
 CONFIG_FILE="$(get_backup_config)"
@@ -38,7 +40,7 @@ case "$MANAGER" in
   "pacaur") ;&
   "pacman") 
     echo "copying the list of $MANAGER packages"
-    pacman -Qqe > "${BACKUP_DIR}/${MANAGED_PKGS}"
+    $MANAGER -Qqe > "${BACKUP_DIR}/${MANAGED_PKGS}"
     echo "done"
     ;;
   "apt")
@@ -56,6 +58,7 @@ if [ -n "$USER_PKGS" ]; then
   for pkg in "${USER_PKGS[@]}"; do
     echo "$pkg" > "${BACKUP_DIR}/${USER_LIST}"
     
+    # TODO: make all bars equal
     loading_bar "$i" "$n" "20" "$pkg" "$COLORFUL_LOADING"
     ((i++))
   done
@@ -81,6 +84,7 @@ loading_bar "$i" "$n" "40" "" "$COLORFUL_LOADING"
 echo ""
 echo "done"
 
+# TODO: REMOVE compression, unless done as a stream, compression should be done by the user
 # compress if we should
 if [ "${COMPRESS}" -eq "0" ]; then
   echo "compressing"
